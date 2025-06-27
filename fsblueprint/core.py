@@ -5,7 +5,6 @@ def create_from_yaml(yaml_file, target_dir="."):
     """Create folder/file structure from YAML"""
     with open(yaml_file, 'r') as f:
         structure = yaml.safe_load(f)
-        print(structure)
     
     _create_structure(structure, Path(target_dir))
 
@@ -19,9 +18,10 @@ def _create_structure(structure, base_path):
             path.mkdir(parents=True, exist_ok=True)
             _create_structure(content, path)
         else:
-            # It's a file - create empty for now
+            # It's a file - write content (or empty if None/empty string)
             path.parent.mkdir(parents=True, exist_ok=True)
-            path.touch()  # Creates empty file
+            with open(path, 'w', encoding='utf-8') as f:
+                f.write(content or "")  # Handle None or empty content
 
 def create_yaml_from_structure(source_dir, output_yaml):
     """Generate YAML blueprint from existing directory structure"""
@@ -36,7 +36,12 @@ def _scan_structure(path):
         raise FileNotFoundError(f"Path {path} does not exist")
     
     if path.is_file():
-        return ""  # Empty content for now
+        try:
+            with open(path, 'r', encoding='utf-8') as f:
+                return f.read()
+        except UnicodeDecodeError:
+            # Handle binary files
+            return f"<binary file: {path.name}>"
     
     result = {}
     
@@ -47,6 +52,11 @@ def _scan_structure(path):
         if item.is_dir():
             result[item.name] = _scan_structure(item)
         else:
-            result[item.name] = ""  # Empty content for now
+            try:
+                with open(item, 'r', encoding='utf-8') as f:
+                    result[item.name] = f.read()
+            except UnicodeDecodeError:
+                # Handle binary files
+                result[item.name] = f"<binary file: {item.name}>"
     
     return result

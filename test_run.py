@@ -1,16 +1,13 @@
 from fsblueprint.core import create_from_yaml, create_yaml_from_structure
 
-# Test 1: Create structure from YAML
-print("=== Test 1: YAML → Structure ===")
-create_from_yaml('examples/simple.yaml', './test_output')
-print("Structure created in ./test_output")
+print("=== Creating structure with content ===")
+create_from_yaml('./examples/test_with_content.yaml', './content_test')
+print("Done! Check ./content_test folder and file contents")
 
-# Test 2: Generate YAML from structure
-print("\n=== Test 2: Structure → YAML ===")
-create_yaml_from_structure('./test_output', './generated.yaml')
-print("YAML generated as ./generated.yaml")
+print("\n=== Generating YAML from structure ===")
+create_yaml_from_structure('./content_test', './reverse_content.yaml')
+print("Generated ./reverse_content.yaml")
 
-# Show the generated YAML
-print("\n=== Generated YAML content ===")
-with open('./generated.yaml', 'r') as f:
+print("\n=== Content of main.py ===")
+with open('./content_test/my_app/src/main.py', 'r') as f:
     print(f.read())
