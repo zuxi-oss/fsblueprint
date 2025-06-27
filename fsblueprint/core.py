@@ -14,7 +14,6 @@ def create_from_yaml(yaml_file, target_dir="."):
     """Create folder/file structure from YAML"""
     with open(yaml_file, 'r') as f:
         structure = yaml.safe_load(f)
-        print(structure)
     
     _create_structure(structure, Path(target_dir))
 
