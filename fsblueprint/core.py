@@ -117,8 +117,8 @@ def _scan_structure(path, ignore_patterns=None):
     items = sorted(path.iterdir(), key=lambda x: (x.is_file(), x.name))
     
     for item in items:
-        # Skip ignored files/directories
-        if should_ignore(item, ignore_patterns):
+        # Skip ignored files/directories - but only if we have ignore patterns
+        if ignore_patterns is not None and should_ignore(item, ignore_patterns):
             continue
             
         if item.is_dir():
@@ -135,3 +135,4 @@ def _scan_structure(path, ignore_patterns=None):
                 result[item.name] = f"<binary file: {item.name}>"
     
     return result
+
