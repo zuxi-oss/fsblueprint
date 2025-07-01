@@ -1,5 +1,6 @@
 import yaml
 from pathlib import Path
+from .utils import _read_file
 
 # Default patterns to ignore
 DEFAULT_IGNORE_PATTERNS = {
@@ -91,48 +92,33 @@ def _create_structure(structure, base_path):
             with open(path, 'w', encoding='utf-8') as f:
                 f.write(content or "")
 
-def create_yaml_from_structure(source_dir, output_yaml, ignore_patterns=None):
+def create_yaml_from_structure(source_dir, output_yaml, ignore_patterns=None, include_content=False):
     """Generate YAML blueprint from existing directory structure"""
-    structure = _scan_structure(Path(source_dir), ignore_patterns)
+    structure = _scan_structure(Path(source_dir), ignore_patterns, include_content)
     
     with open(output_yaml, 'w') as f:
         yaml.dump(structure, f, default_flow_style=False, sort_keys=False, allow_unicode=True)
 
-def _scan_structure(path, ignore_patterns=None):
-    """Recursively scan directory structure"""
+def _scan_structure(path, ignore_patterns=None, include_content=False):
     if not path.exists():
         raise FileNotFoundError(f"Path {path} does not exist")
     
     if path.is_file():
-        try:
-            with open(path, 'r', encoding='utf-8') as f:
-                return f.read()
-        except UnicodeDecodeError:
-            # Handle binary files
-            return f"<binary file: {path.name}>"
+        return _read_file(path) if include_content else ""
     
     result = {}
-    
-    # Get all items and sort them (directories first, then files)
     items = sorted(path.iterdir(), key=lambda x: (x.is_file(), x.name))
     
     for item in items:
-        # Skip ignored files/directories - but only if we have ignore patterns
         if ignore_patterns is not None and should_ignore(item, ignore_patterns):
             continue
-            
+        
         if item.is_dir():
-            sub_structure = _scan_structure(item, ignore_patterns)
-            # Only include directory if it has content after filtering
+            sub_structure = _scan_structure(item, ignore_patterns, include_content)
             if sub_structure:
                 result[item.name] = sub_structure
         else:
-            try:
-                with open(item, 'r', encoding='utf-8') as f:
-                    result[item.name] = f.read()
-            except UnicodeDecodeError:
-                # Handle binary files
-                result[item.name] = f"<binary file: {item.name}>"
+            result[item.name] = _read_file(item) if include_content else ""
     
     return result
 

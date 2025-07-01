@@ -11,3 +11,4 @@ wheels/
 scripts/*
 .env
 .env.local
+generated.*
