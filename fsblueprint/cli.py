@@ -30,6 +30,9 @@ Examples:
                                 help='Include all files (disable default ignore patterns)')
     blueprint_parser.add_argument('--ignore', nargs='+', 
                                 help='Additional patterns to ignore')
+    blueprint_parser.add_argument('--with-content', action='store_true',
+                              help='Include file content in the YAML output')
+
     
     args = parser.parse_args()
     
@@ -59,7 +62,7 @@ Examples:
             elif args.ignore and ignore_patterns is None:
                 ignore_patterns = set(args.ignore)
                 
-            create_yaml_from_structure(args.source_dir, args.yaml_file, ignore_patterns)
+            create_yaml_from_structure(args.source_dir, args.yaml_file, ignore_patterns, include_content=args.with_content)
             print(f"✅ Blueprint saved to '{args.yaml_file}'")
             
     except Exception as e:
