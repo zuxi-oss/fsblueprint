@@ -1,15 +1,21 @@
 # FSBlueprint
 
-**FSBlueprint** is a Python tool for bidirectional conversion between YAML blueprints and directory structures. Effortlessly scaffold complex projects from a single YAML file, or generate a reproducible YAML blueprint from any existing folder tree—including file contents.
+**FSBlueprint** is a Python CLI and API tool for working with directory structures and blueprints. Easily scaffold projects from YAML definitions or generate reusable blueprints from existing directories.
 
-## Features
+---
 
-- Scaffold entire directory trees (with files and contents) from YAML
-- Generate a YAML blueprint from any existing directory structure
-- Supports nested folders, empty files, and multi-line file contents
-- Simple CLI and Python API
+## ✨ Features
 
-## Installation
+- ✅ Scaffold full folder structures from a simple YAML blueprint
+- ✅ Generate YAML from any existing folder structure
+- ✅ Default: Outputs a **tree-style structure preview**
+- ✅ Optional: Include **file contents** in the YAML blueprint with `--with-content`
+- ✅ Supports nested folders, empty files, and multiline content
+- ✅ Simple CLI + importable Python API
+
+---
+
+## 📦 Installation
 
 Install from PyPI:
 
@@ -17,33 +23,56 @@ Install from PyPI:
 pip install fsblueprint
 ```
 
-## Usage
+---
 
-### Create a directory structure from YAML
+## 🚀 Usage
+
+### 🔧 Scaffold a directory structure from YAML
 
 ```bash
 fsblueprint scaffold project.yaml ./my_project
 ```
 
-### Generate a YAML blueprint from an existing directory
+This creates folders and files based on your `project.yaml` blueprint.
+
+---
+
+### 🔍 Preview a directory structure
 
 ```bash
-fsblueprint blueprint ./existing_project blueprint.yaml
+fsblueprint blueprint ./existing_project
 ```
 
-Or use the Python API:
+This will print a tree-like structure of your folder (ignoring system/development files by default).
 
-```python
-from fsblueprint.core import create_from_yaml, create_yaml_from_structure
+#### Example output:
 
-# Create structure from YAML
-create_from_yaml('project.yaml', 'my_project')
+```
+📂 Structure Preview:
 
-# Generate YAML from directory
-create_yaml_from_structure('existing_project', 'blueprint.yaml')
+existing_project/
+├── README.md
+├── src/
+│   ├── main.py
+│   └── utils/
+│       └── helper.py
+└── tests/
+    └── test_main.py
 ```
 
-## Example YAML
+---
+
+### 🧾 Generate YAML with file contents
+
+```bash
+fsblueprint blueprint ./existing_project blueprint.yaml --with-content
+```
+
+This saves a `.yaml` file that includes both structure and file content.
+
+---
+
+## 📄 Example YAML Blueprint
 
 ```yaml
 my_project:
@@ -60,6 +89,15 @@ my_project:
     test_main.py: ""
 ```
 
-## License
+---
+
+## 🛠 Ignore Patterns
+
+By default, FSBlueprint excludes common directories like `.git`, `node_modules`, `.env`, `__pycache__`, etc.
+Use `--no-ignore` to include everything, or `--ignore pattern1 pattern2` to extend ignore behavior.
+
+---
+
+## 📜 License
 
 MIT
