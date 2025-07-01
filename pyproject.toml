@@ -1,6 +1,6 @@
 [project]
 name = "fsblueprint"
-version = "0.2.0"
+version = "0.3.0"
 description = "Bidirectional YAML ↔ Directory Structure Tool"
 readme = "README.md"
 authors = [
@@ -30,6 +30,9 @@ Repository = "https://github.com/zuxi-oss/fsblueprint"
 
 [project.scripts]
 fsblueprint = "fsblueprint.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["fsblueprint"]
 
 [build-system]
 requires = ["hatchling"]
