@@ -33,3 +33,31 @@ def _scan_structure(path, ignore_patterns=None, include_content=False):
             result[item.name] = _read_file(item) if include_content else ""
 
     return result
+
+
+def create_structure_preview(source_dir, ignore_patterns=None):
+    path = Path(source_dir)
+    lines = _build_tree(path, ignore_patterns)
+    return "\n".join(lines)
+
+
+def _build_tree(path, ignore_patterns=None, prefix=""):
+    if not path.exists():
+        raise FileNotFoundError(f"Path {path} does not exist")
+
+    items = sorted(path.iterdir(), key=lambda x: (x.is_file(), x.name))
+    lines = []
+    for idx, item in enumerate(items):
+        is_last = idx == len(items) - 1
+        branch = "└── " if is_last else "├── "
+        next_prefix = "    " if is_last else "│   "
+
+        if ignore_patterns and should_ignore(item, ignore_patterns):
+            continue
+
+        lines.append(f"{prefix}{branch}{item.name}")
+
+        if item.is_dir():
+            lines += _build_tree(item, ignore_patterns, prefix + next_prefix)
+
+    return lines
