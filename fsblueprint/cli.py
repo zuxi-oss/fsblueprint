@@ -85,7 +85,8 @@ Examples:
                 print(f"✅ Blueprint with content saved to '{args.yaml_file}'")
             else:
                 preview = create_structure_preview(args.source_dir, ignore_patterns)
-                print("📂 Structure Preview:\n")
+                dir_name = Path(args.source_dir).name.capitalize()
+                print(f"📂 {dir_name} Structure Preview:\n")
                 print(preview)
 
     except Exception as e:
